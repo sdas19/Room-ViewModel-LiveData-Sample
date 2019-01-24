@@ -1,8 +1,8 @@
 package soumyajitdas.com.roomviewmodelkotlinsample.Activity
 
-import android.arch.lifecycle.LiveData
 import android.util.Log
 import com.google.gson.Gson
+import io.reactivex.Flowable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,19 +12,16 @@ import soumyajitdas.com.roomviewmodelkotlinsample.Model.CountryModel
 import soumyajitdas.com.roomviewmodelkotlinsample.Retrofit.RestApi
 import soumyajitdas.com.roomviewmodelkotlinsample.RoomViewModelKotlinSampleApplication
 
-class MainActivityRepository {
+class MainActivityPresenter(_mainView : MainActivityContract.View) : MainActivityContract.Presenter{
 
+
+    val mainView = _mainView
     val BASE_URL = "https://restcountries.eu/rest/v2/"
-    val TAG = MainActivityRepository::class.java.simpleName
+    val TAG = MainActivityPresenter::class.java.simpleName
 
-    /*fun getCountries() : LiveData<List<CountryModel>>
-    {
-        return RoomViewModelKotlinSampleApplication.database!!.countryDao().getAllCountries()
 
-    }
+    override fun apiCallAndPutInDB() {
 
-    fun apiCallAndPutInDB()
-    {
         val gson = Gson()
         val retrofit =  Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -33,7 +30,7 @@ class MainActivityRepository {
 
         val restApi = retrofit.create<RestApi>(RestApi::class.java)
 
-        restApi.getAllCountries().enqueue(object : Callback<List<CountryModel>>{
+        restApi.getAllCountries().enqueue(object : Callback<List<CountryModel>> {
 
             override fun onFailure(call: Call<List<CountryModel>>?, t: Throwable?) {
                 Log.e(TAG,"OOPS!! something went wrong..")
@@ -55,8 +52,10 @@ class MainActivityRepository {
                 }
 
             }
-        })
+        })    }
 
+    override fun getCountries(): Flowable<List<CountryModel>> {
+        return RoomViewModelKotlinSampleApplication.database!!.countryDao().getAllCountries()
     }
-    */
+
 }

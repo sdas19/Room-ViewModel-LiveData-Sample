@@ -12,15 +12,15 @@ class MainActivityViewModel : ViewModel() {
         mainActivityRepository = MainActivityRepository()
     }
 
-    fun getAllCountryList(): LiveData<List<CountryModel>>
+    /*fun getAllCountryList(): LiveData<List<CountryModel>>
     {
         return mainActivityRepository.getCountries()
     }
 
     fun getCountriesFromAPIAndStore()
     {
-        mainActivityRepository.ApiCallAndPutInDB()
+        mainActivityRepository.apiCallAndPutInDB()
     }
-
+*/
 
 }

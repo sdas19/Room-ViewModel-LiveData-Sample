@@ -8,9 +8,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import soumyajitdas.com.roomviewmodelkotlinsample.DB.CountryDatabase
 import soumyajitdas.com.roomviewmodelkotlinsample.Model.CountryModel
 import soumyajitdas.com.roomviewmodelkotlinsample.Retrofit.RestApi
 import soumyajitdas.com.roomviewmodelkotlinsample.RoomViewModelKotlinSampleApplication
+import javax.inject.Inject
 
 class MainActivityPresenter(_mainView : MainActivityContract.View) : MainActivityContract.Presenter{
 
@@ -19,14 +21,24 @@ class MainActivityPresenter(_mainView : MainActivityContract.View) : MainActivit
     val BASE_URL = "https://restcountries.eu/rest/v2/"
     val TAG = MainActivityPresenter::class.java.simpleName
 
+    @Inject
+    lateinit var countryDatabase: CountryDatabase
+
+    @Inject
+    lateinit var retrofit: Retrofit
+
+
+    init {
+        RoomViewModelKotlinSampleApplication.mApiComponent?.inject(this)
+    }
 
     override fun apiCallAndPutInDB() {
 
-        val gson = Gson()
+        /*val gson = Gson()
         val retrofit =  Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
-                .build()
+                .build()*/
 
         val restApi = retrofit.create<RestApi>(RestApi::class.java)
 
@@ -44,8 +56,8 @@ class MainActivityPresenter(_mainView : MainActivityContract.View) : MainActivit
                     200 ->{
                         Thread(Runnable {
 
-                            RoomViewModelKotlinSampleApplication.database!!.countryDao().deleteAllCountries()
-                            RoomViewModelKotlinSampleApplication.database!!.countryDao().insertAllCountries(response.body()!!)
+                            countryDatabase.countryDao().deleteAllCountries()
+                            countryDatabase.countryDao().insertAllCountries(response.body()!!)
 
                         }).start()
                     }
@@ -55,7 +67,7 @@ class MainActivityPresenter(_mainView : MainActivityContract.View) : MainActivit
         })    }
 
     override fun getCountries(): Flowable<List<CountryModel>> {
-        return RoomViewModelKotlinSampleApplication.database!!.countryDao().getAllCountries()
+        return countryDatabase.countryDao().getAllCountries()
     }
 
 }
